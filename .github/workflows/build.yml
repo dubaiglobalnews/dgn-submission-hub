@@ -1,0 +1,32 @@
+name: Build Windows App
+
+# يشتغل تلقائيًا كل ما ترفع كود جديد على فرع main، أو تقدر تشغّله يدويًا من تاب Actions
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: تحميل الكود
+        uses: actions/checkout@v4
+
+      - name: تجهيز Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: تثبيت المكتبات
+        run: npm install
+
+      - name: بناء نسخة ويندوز (.exe)
+        run: npm run dist
+
+      - name: رفع ملف الإخراج عشان تقدر تحمله
+        uses: actions/upload-artifact@v4
+        with:
+          name: ATN-Submission-Hub-Windows
+          path: dist/*.exe
